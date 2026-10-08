@@ -18,15 +18,21 @@ export function AircraftStatus({
     ? formatTimestamp(lastUpdatedAt)
     : null;
   const updatedSuffix = formattedLastUpdatedAt
-    ? ` - Last updated: ${formattedLastUpdatedAt}`
+    ? ` · Updated ${formattedLastUpdatedAt}`
     : '';
   const statusCopy = errorMessage
     ? formattedLastUpdatedAt
       ? `${errorMessage} Showing last update from ${formattedLastUpdatedAt}.`
       : errorMessage
     : isLoading
-      ? 'Loading aircraft positions...'
-      : `Loaded aircraft: ${aircraftCount ?? 0}${updatedSuffix}`;
+      ? 'Loading aircraft positions…'
+      : `${aircraftCount ?? 0} aircraft tracked${updatedSuffix}`;
 
-  return <p className="aircraft-status">{statusCopy}</p>;
+  const statusClass = errorMessage
+    ? 'aircraft-status-error'
+    : isLoading
+      ? 'aircraft-status-loading'
+      : '';
+
+  return <p className={`aircraft-status ${statusClass}`}>{statusCopy}</p>;
 }

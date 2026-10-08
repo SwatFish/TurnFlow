@@ -1,6 +1,46 @@
 .aircraft-status {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(155, 179, 194, 0.12);
+  border-radius: 6px;
   color: #9bb3c2;
-  font-size: 0.88rem;
-  line-height: 1.45;
+  display: flex;
+  font-size: 0.76rem;
+  gap: 8px;
+  line-height: 1.4;
   margin: 12px 0 0;
+  padding: 7px 10px;
+}
+
+.aircraft-status::before {
+  background: #4ade80;
+  border-radius: 50%;
+  content: '';
+  flex: 0 0 auto;
+  height: 6px;
+  width: 6px;
+}
+
+.aircraft-status-loading::before {
+  animation: aircraft-status-pulse 1.2s ease-in-out infinite;
+  background: #81b8d7;
+}
+
+.aircraft-status-error {
+  border-color: rgba(255, 180, 168, 0.35);
+  color: #ffb4a8;
+}
+
+.aircraft-status-error::before {
+  background: #ffb4a8;
+}
+
+@keyframes aircraft-status-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }

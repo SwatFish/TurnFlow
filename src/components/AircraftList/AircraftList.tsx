@@ -13,6 +13,10 @@ export function AircraftList({
   selectedAircraftId,
   onSelectAircraft,
 }: AircraftListProps) {
+  if (features.length === 0) {
+    return <p className="aircraft-list-empty">No traffic in range.</p>;
+  }
+
   return (
     <ul className="aircraft-list">
       {features.map((feature) => {
@@ -29,7 +33,7 @@ export function AircraftList({
                 {feature.properties.callsign ?? feature.properties.icao24}
               </span>
               <span className="aircraft-meta">
-                {formatMeters(feature.properties.altitudeMeters)} /{' '}
+                {formatMeters(feature.properties.altitudeMeters)} ·{' '}
                 {formatSpeed(feature.properties.groundSpeedMetersPerSecond)}
               </span>
             </button>

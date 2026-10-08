@@ -14,7 +14,6 @@ type SelectedLocation = {
   label: string;
 };
 
-
 export function App() {
   const {
     aircraftCount,
@@ -37,6 +36,7 @@ export function App() {
     errorMessage: airportErrorMessage,
     isLoading: isAirportLoading,
     runways,
+    weather,
   } = useAirportContext({
     latitude: selectedLocation.latitude,
     longitude: selectedLocation.longitude,
@@ -50,7 +50,10 @@ export function App() {
       <section className="status-panel" aria-labelledby="page-title">
         <div className="status-panel-header">
           <p className="eyebrow">EBBR situational awareness</p>
-          <h1 id="page-title">Airspace Pulse</h1>
+          <div className="app-title-row">
+            <span className="app-title-dot" aria-hidden="true" />
+            <h1 id="page-title">Airspace Pulse</h1>
+          </div>
           <AircraftStatus
             aircraftCount={aircraftCount}
             errorMessage={errorMessage}
@@ -63,15 +66,24 @@ export function App() {
             isLoading={isAirportLoading}
             label={selectedLocation.label}
             runways={runways}
+            weather={weather}
           />
         </div>
         <div className="traffic-list-panel">
-          {aircraftData && (
+          <div className="traffic-list-header">
+            <p className="traffic-list-title">Traffic</p>
+            <span className="traffic-list-count">
+              {aircraftData ? `${aircraftData.features.length} targets` : '—'}
+            </span>
+          </div>
+          {aircraftData ? (
             <AircraftList
               features={aircraftData.features}
               selectedAircraftId={selectedAircraftId}
               onSelectAircraft={setSelectedAircraftId}
             />
+          ) : (
+            <p className="aircraft-list-empty">Waiting for traffic data…</p>
           )}
         </div>
         <div className="selected-aircraft-panel">

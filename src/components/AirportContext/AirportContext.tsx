@@ -1,5 +1,6 @@
 import type {
   AirportRunwayResponse,
+  AirportWeatherResponse,
   NearestAirportResponse,
 } from '../../api/airports';
 import './AirportContext.css';
@@ -10,6 +11,7 @@ type AirportContextProps = {
   isLoading: boolean;
   label: string;
   runways: AirportRunwayResponse[] | null;
+  weather: AirportWeatherResponse | null;
 };
 
 export function AirportContext({
@@ -18,12 +20,13 @@ export function AirportContext({
   isLoading,
   label,
   runways,
+  weather,
 }: AirportContextProps) {
   if (isLoading) {
     return (
       <section className="airport-context" aria-label="Airport context">
         <p className="airport-context-label">{label}</p>
-        <p className="airport-context-status">Loading airport context...</p>
+        <p className="airport-context-status">Loading airport context…</p>
       </section>
     );
   }
@@ -67,6 +70,27 @@ export function AirportContext({
         <span>{airport.type.replaceAll('_', ' ')}</span>
       </div>
 
+      {weather && (
+        <div className="airport-weather" aria-label="Airport weather">
+          <div className="airport-weather-header">
+            <span className="airport-weather-title">Weather</span>
+            <span
+              className={`flight-category flight-category-${weather.flightCategory.toLowerCase()}`}
+            >
+              {weather.flightCategory}
+            </span>
+          </div>
+          <p className="airport-weather-raw">
+            <span className="airport-weather-kind">METAR</span>
+            {weather.metar}
+          </p>
+          <p className="airport-weather-raw">
+            <span className="airport-weather-kind">TAF</span>
+            {weather.taf}
+          </p>
+        </div>
+      )}
+
       <ul className="runway-list" aria-label="Runways">
         {runways?.map((runway) => (
           <li className="runway-item" key={runway.sourceRunwayId}>
@@ -75,12 +99,14 @@ export function AirportContext({
             </span>
             <span className="runway-meta">
               {runway.lengthFt ? `${runway.lengthFt} ft` : 'length unknown'}
-              {' - '}
+              {' · '}
               {runway.surface ?? 'surface unknown'}
             </span>
-            <span className="runway-state">
+            <span
+              className={`runway-state ${runway.closed ? 'runway-state-closed' : ''}`}
+            >
               {runway.closed ? 'Closed' : 'Open'}
-              {runway.lighted ? ' - Lighted' : ''}
+              {runway.lighted ? ' · Lighted' : ''}
             </span>
           </li>
         ))}

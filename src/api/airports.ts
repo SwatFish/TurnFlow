@@ -29,6 +29,44 @@ export type AirportRunwayResponse = {
   importedAt: string;
 };
 
+export type AirportWeatherResponse = {
+  airportIdent: string;
+  metar: string;
+  taf: string;
+  observedAt: string;
+  flightCategory: 'VFR' | 'MVFR' | 'IFR' | 'LIFR';
+};
+
+const MOCK_WEATHER_BY_AIRPORT_ID: Record<string, AirportWeatherResponse> = {
+  '2155': {
+    airportIdent: 'EBBR',
+    metar: 'EBBR 080925Z 24012KT 9999 FEW045 SCT250 14/06 Q1018 NOSIG',
+    taf: 'EBBR 080500Z 0806/0912 24010KT 9999 SCT040 TEMPO 0808/0816 24015G25KT -SHRA BKN025',
+    observedAt: '2026-10-08T09:25:00.000Z',
+    flightCategory: 'VFR',
+  },
+  '302578': {
+    airportIdent: 'EBCI',
+    metar: 'EBCI 080920Z 25010KT 8000 -RA BKN012 OVC030 12/09 Q1016',
+    taf: 'EBCI 080500Z 0806/0912 25012KT 8000 -RA BKN015 TEMPO 0806/0814 4000 RA BKN008',
+    observedAt: '2026-10-08T09:20:00.000Z',
+    flightCategory: 'MVFR',
+  },
+};
+
+export async function fetchAirportWeather(
+  source: string,
+  sourceAirportId: string,
+): Promise<AirportWeatherResponse | null> {
+  await delay(200);
+
+  if (source !== 'ourairports') {
+    return null;
+  }
+
+  return MOCK_WEATHER_BY_AIRPORT_ID[sourceAirportId] ?? null;
+}
+
 const MOCK_AIRPORTS: readonly NearestAirportResponse[] = [
   {
     source: 'ourairports',

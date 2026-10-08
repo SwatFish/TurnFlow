@@ -14,18 +14,80 @@
 }
 
 .aircraft-map-status {
-  background: rgba(13, 27, 39, 0.92);
+  align-items: center;
+  background: rgba(11, 22, 32, 0.92);
   border: 1px solid rgba(155, 179, 194, 0.22);
   border-radius: 6px;
   color: #d8e3ea;
-  font-size: 0.85rem;
+  display: flex;
+  font-size: 0.78rem;
   font-weight: 700;
-  left: 16px;
+  gap: 8px;
+  left: 14px;
+  letter-spacing: 0.04em;
   line-height: 1.2;
-  padding: 10px 12px;
+  padding: 8px 12px;
   pointer-events: none;
   position: absolute;
+  top: 14px;
+}
+
+.aircraft-map-status::before {
+  animation: aircraft-map-pulse 1.2s ease-in-out infinite;
+  background: #81b8d7;
+  border-radius: 50%;
+  content: '';
+  height: 6px;
+  width: 6px;
+}
+
+.aircraft-map-status-error::before {
+  animation: none;
+  background: #ffb4a8;
+}
+
+@keyframes aircraft-map-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.runway-overlay {
+  position: absolute;
   top: 16px;
+  right: 16px;
+  z-index: 2;
+  width: 292px;
+  max-width: calc(100% - 32px);
+  max-height: calc(100% - 32px);
+  overflow-y: auto;
+  background: var(--runway-panel);
+  color: var(--runway-text);
+  border: 1px solid var(--runway-border);
+  border-top: 2px solid var(--runway-open);
+  border-radius: 6px;
+  box-shadow: var(--runway-shadow);
+  padding: 16px;
+  letter-spacing: 0;
+}
+.runway-overlay-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.runway-overlay-airport { margin: 0 0 6px; font-size: 11px; color: var(--runway-muted); }
+.runway-overlay h2 { margin: 0; font-size: 22px; font-variant-numeric: tabular-nums; }
+.runway-overlay-close { color: var(--runway-muted); flex-shrink: 0; }
+.runway-overlay-close:hover { background: var(--runway-casing); color: var(--runway-text); }
+.runway-overlay-state { margin: 12px 0; color: var(--runway-open); font-size: 12px; font-weight: 600; }
+.runway-overlay-state.is-closed { color: var(--runway-closed); }
+.runway-overlay-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; border-top: 1px solid var(--runway-border); padding-top: 14px; margin: 0; }
+.runway-overlay-specs dt { font-size: 11px; color: var(--runway-muted); margin-bottom: 4px; }
+.runway-overlay-specs dd { font-size: 14px; margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+.runway-overlay-footer { border-top: 1px solid var(--runway-border); padding-top: 12px; margin-top: 16px; font-size: 10px; color: var(--runway-muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .aircraft-map-status::before { animation: none; }
 }
 
 @media (max-width: 820px) {

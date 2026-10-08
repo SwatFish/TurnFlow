@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Map, MapMouseEvent } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { AircraftPositionFeatureCollection } from '../../api/aircraft';
@@ -18,7 +18,8 @@ import {
   SelectedMapLocation,
   updateSelectedLocationSource,
 } from './selectedLocationLayer';
-import { ensureRunwayLayers, updateRunwaySource } from './runwayLayers';
+import { ensureRunwayLayers, updateRunwaySource, startRunwaySweep, RUNWAY_HIT_LAYER_ID } from './runwayLayers';
+import { RunwayOverlay } from './RunwayOverlay';
 import { useMapLibreMap } from './useMapLibreMap';
 import './AircraftMap.css';
 
@@ -45,6 +46,9 @@ export const AircraftMap = ({
   onSelectAircraft,
   onSelectLocation,
 }: AircraftMapProps) => {
+  const [selectedRunwayId, setSelectedRunwayId] = useState<string | null>(null);
+  const selectedRunway = airportRunways?.find((runway) => runway.sourceRunwayId === selectedRunwayId);
+  const closeRunway = useCallback(() => setSelectedRunwayId(null), []);
   const handleMapLoad = useCallback(
     (map: Map) => {
       ensureAircraftLayers(map, onSelectAircraft);
@@ -73,6 +77,15 @@ export const AircraftMap = ({
         return;
       }
 
+      const hits = map.getLayer(RUNWAY_HIT_LAYER_ID)
+        ? map.queryRenderedFeatures(event.point, { layers: [RUNWAY_HIT_LAYER_ID] })
+        : [];
+      const runwayId = hits[0]?.id;
+      if (runwayId != null) {
+        setSelectedRunwayId(String(runwayId));
+        return;
+      }
+      setSelectedRunwayId(null);
       onSelectLocation({
         latitude: event.lngLat.lat,
         longitude: event.lngLat.lng,
@@ -86,6 +99,23 @@ export const AircraftMap = ({
       map.off('click', handleMapClick);
     };
   }, [mapStatus, onSelectLocation]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || mapStatus !== 'ready') return;
+    const showPointer = () => { map.getCanvas().style.cursor = 'pointer'; };
+    const hidePointer = () => { map.getCanvas().style.cursor = ''; };
+    map.on('mouseenter', RUNWAY_HIT_LAYER_ID, showPointer);
+    map.on('mouseleave', RUNWAY_HIT_LAYER_ID, hidePointer);
+    const stopSweep = startRunwaySweep(map);
+    return () => {
+      stopSweep();
+      map.off('mouseenter', RUNWAY_HIT_LAYER_ID, showPointer);
+      map.off('mouseleave', RUNWAY_HIT_LAYER_ID, hidePointer);
+    };
+  }, [mapStatus]);
+
+  useEffect(() => { setSelectedRunwayId(null); }, [selectedLocation]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -154,9 +184,13 @@ export const AircraftMap = ({
   return (
     <div className="aircraft-map-shell">
       <div className="aircraft-map" ref={mapContainerRef} />
+      {selectedRunway && <RunwayOverlay runway={selectedRunway} onClose={closeRunway} />}
       {mapStatus !== 'ready' && (
-        <div className="aircraft-map-status" role="status">
-          {mapStatus === 'loading' ? 'Loading map...' : 'Map could not load.'}
+        <div
+          className={`aircraft-map-status ${mapStatus === 'error' ? 'aircraft-map-status-error' : ''}`}
+          role="status"
+        >
+          {mapStatus === 'loading' ? 'Loading map…' : 'Map could not load.'}
         </div>
       )}
     </div>

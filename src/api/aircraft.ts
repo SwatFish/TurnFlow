@@ -89,7 +89,40 @@ const MOCK_AIRCRAFT_POSITIONS: AircraftPositionFeatureCollection = {
 export async function fetchAircraftPositions(): Promise<AircraftPositionFeatureCollection> {
   await delay(250);
 
-  return MOCK_AIRCRAFT_POSITIONS;
+  return {
+    type: 'FeatureCollection',
+    features: MOCK_AIRCRAFT_POSITIONS.features.map(advanceMockPosition),
+  };
+}
+
+/**
+ * Mock aircraft drift along their heading at their ground speed so trails
+ * accumulate points across polls. Purely cosmetic demo behavior.
+ */
+function advanceMockPosition(
+  feature: AircraftPositionFeature,
+): AircraftPositionFeature {
+  const secondsSinceEpoch = Date.now() / 1000;
+  const [longitude, latitude] = feature.geometry.coordinates;
+  const speed = feature.properties.groundSpeedMetersPerSecond ?? 0;
+  const heading = ((feature.properties.headingDegrees ?? 0) + 90) * (Math.PI / 180);
+
+  const metersNorth = speed * secondsSinceEpoch * Math.sin(heading);
+  const metersEast = speed * secondsSinceEpoch * Math.cos(heading);
+  const nextLatitude = latitude + (metersNorth / 111_320) % 0.5;
+  const nextLongitude =
+    longitude + (metersEast / (111_320 * Math.cos(latitude * (Math.PI / 180)))) % 0.5;
+
+  return {
+    ...feature,
+    geometry: {
+      type: 'Point',
+      coordinates: [
+        Number(nextLongitude.toFixed(4)),
+        Number(nextLatitude.toFixed(4)),
+      ],
+    },
+  };
 }
 
 function delay(milliseconds: number): Promise<void> {

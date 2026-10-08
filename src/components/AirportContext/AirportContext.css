@@ -1,10 +1,10 @@
 .airport-context {
-  background: rgba(255, 255, 255, 0.045);
+  background: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(155, 179, 194, 0.14);
   border-radius: 8px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  margin-top: 14px;
-  padding: 14px;
+  margin-top: 12px;
+  padding: 12px;
 }
 
 .airport-context-header {
@@ -17,16 +17,19 @@
 
 .airport-context-label {
   color: #81b8d7;
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   font-weight: 700;
+  letter-spacing: 0.12em;
   line-height: 1.2;
-  margin: 0 0 5px;
+  margin: 0 0 4px;
   text-transform: uppercase;
 }
 
 .airport-context h2 {
   color: #f2f7fa;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
   line-height: 1.1;
   margin: 0;
 }
@@ -34,22 +37,23 @@
 .airport-distance {
   background: rgba(37, 99, 125, 0.34);
   border: 1px solid rgba(129, 184, 215, 0.22);
-  border-radius: 999px;
+  border-radius: 4px;
   color: #d8eef8;
   flex: 0 0 auto;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
   font-weight: 700;
   line-height: 1;
-  padding: 7px 9px;
+  padding: 5px 7px;
   white-space: nowrap;
 }
 
 .airport-name,
 .airport-context-status {
   color: #c9d7df;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   line-height: 1.35;
-  margin: 10px 0 0;
+  margin: 6px 0 0;
 }
 
 .airport-context-error {
@@ -57,23 +61,99 @@
 }
 
 .runway-summary {
+  border-bottom: 1px solid rgba(155, 179, 194, 0.12);
   color: #9bb3c2;
   display: flex;
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   gap: 10px;
   justify-content: space-between;
-  margin-top: 12px;
-  text-transform: capitalize;
+  letter-spacing: 0.06em;
+  margin-top: 10px;
+  padding-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.airport-weather {
+  background: rgba(8, 17, 26, 0.42);
+  border: 1px solid rgba(155, 179, 194, 0.1);
+  border-radius: 6px;
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 9px 10px;
+}
+
+.airport-weather-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.airport-weather-title {
+  color: #81b8d7;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.flight-category {
+  border-radius: 4px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  padding: 4px 6px;
+}
+
+.flight-category-vfr {
+  background: rgba(74, 222, 128, 0.16);
+  border: 1px solid rgba(74, 222, 128, 0.45);
+  color: #4ade80;
+}
+
+.flight-category-mvfr {
+  background: rgba(56, 189, 248, 0.16);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #7dd3fc;
+}
+
+.flight-category-ifr {
+  background: rgba(248, 113, 113, 0.16);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  color: #f87171;
+}
+
+.flight-category-lifr {
+  background: rgba(217, 70, 239, 0.16);
+  border: 1px solid rgba(217, 70, 239, 0.45);
+  color: #e879f9;
+}
+
+.airport-weather-raw {
+  color: #c9d7df;
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+  font-size: 0.68rem;
+  line-height: 1.45;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.airport-weather-kind {
+  color: #81b8d7;
+  font-weight: 700;
+  margin-right: 6px;
 }
 
 .runway-list {
   display: grid;
-  gap: 8px;
+  gap: 6px;
   list-style: none;
-  margin: 12px 0 0;
+  margin: 10px 0 0;
   max-height: 168px;
   overflow-y: auto;
   padding: 0;
+  scrollbar-color: rgba(129, 184, 215, 0.55) transparent;
 }
 
 .runway-item {
@@ -81,16 +161,18 @@
   border: 1px solid rgba(155, 179, 194, 0.1);
   border-radius: 6px;
   display: grid;
-  gap: 3px;
-  grid-template-columns: minmax(52px, auto) minmax(0, 1fr);
-  padding: 9px;
+  gap: 2px 10px;
+  grid-template-columns: minmax(56px, auto) minmax(0, 1fr);
+  padding: 8px 10px;
 }
 
 .runway-ident {
   color: #f2f7fa;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
   font-weight: 800;
   grid-row: span 2;
+  letter-spacing: 0.03em;
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -98,12 +180,32 @@
 .runway-meta,
 .runway-state {
   color: #9bb3c2;
-  font-size: 0.76rem;
-  line-height: 1.25;
+  font-size: 0.72rem;
+  line-height: 1.3;
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
 .runway-state {
+  align-items: center;
   color: #c9d7df;
+  display: flex;
+  gap: 6px;
+}
+
+.runway-state::before {
+  background: #4ade80;
+  border-radius: 50%;
+  content: '';
+  flex: 0 0 auto;
+  height: 5px;
+  width: 5px;
+}
+
+.runway-state-closed {
+  color: #ffb4a8;
+}
+
+.runway-state-closed::before {
+  background: #ffb4a8;
 }

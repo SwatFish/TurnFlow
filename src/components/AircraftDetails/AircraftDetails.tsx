@@ -16,19 +16,18 @@ export function AircraftDetails({ feature }: AircraftDetailsProps) {
   if (!feature) {
     return (
       <section className="aircraft-details aircraft-details-empty">
-        Select an aircraft
+        Select an aircraft to view details
       </section>
     );
   }
 
   return (
     <section className="aircraft-details" aria-label="Selected aircraft details">
-      <h2>{feature.properties.callsign ?? feature.properties.icao24}</h2>
+      <div className="aircraft-details-header">
+        <h2>{feature.properties.callsign ?? feature.properties.icao24}</h2>
+        <span className="aircraft-details-icao">{feature.properties.icao24}</span>
+      </div>
       <dl className="aircraft-details-grid">
-        <div>
-          <dt>ICAO24</dt>
-          <dd>{feature.properties.icao24}</dd>
-        </div>
         <div>
           <dt>Altitude</dt>
           <dd>{formatMeters(feature.properties.altitudeMeters)}</dd>
@@ -42,16 +41,16 @@ export function AircraftDetails({ feature }: AircraftDetailsProps) {
           <dd>{formatHeading(feature.properties.headingDegrees)}</dd>
         </div>
         <div>
+          <dt>Last contact</dt>
+          <dd>{formatTimestamp(feature.properties.lastContactAt)}</dd>
+        </div>
+        <div>
           <dt>Longitude</dt>
           <dd>{formatCoordinate(feature.geometry.coordinates[0])}</dd>
         </div>
         <div>
           <dt>Latitude</dt>
           <dd>{formatCoordinate(feature.geometry.coordinates[1])}</dd>
-        </div>
-        <div>
-          <dt>Last contact</dt>
-          <dd>{formatTimestamp(feature.properties.lastContactAt)}</dd>
         </div>
       </dl>
     </section>

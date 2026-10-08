@@ -1,10 +1,12 @@
 import React, {useEffect} from 'react';
 import {
     fetchAirportRunways,
+    fetchAirportWeather,
     fetchNearestAirport,
 } from "../api/airports";
 import type {
     AirportRunwayResponse,
+    AirportWeatherResponse,
     NearestAirportResponse,
 } from "../api/airports";
 
@@ -16,6 +18,7 @@ type UseAirportContextType = {
 export type UseAirportContextResult = {
     airport: NearestAirportResponse | null;
     runways: AirportRunwayResponse[] | null;
+    weather: AirportWeatherResponse | null;
     isLoading: boolean;
     errorMessage: string | null;
 };
@@ -26,6 +29,7 @@ const useAirportContext = ({
 }: UseAirportContextType): UseAirportContextResult => {
     const [airport, setAirport] = React.useState<NearestAirportResponse | null>(null);
     const [runways, setRunways] = React.useState<AirportRunwayResponse[] | null>(null);
+    const [weather, setWeather] = React.useState<AirportWeatherResponse | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
     const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
@@ -38,6 +42,7 @@ const useAirportContext = ({
                 setErrorMessage(null);
                 setAirport(null);
                 setRunways(null);
+                setWeather(null);
 
                 const airport = await fetchNearestAirport(latitude, longitude);
 
@@ -46,16 +51,21 @@ const useAirportContext = ({
                 }
 
                 if(airport) {
-                    const runways = await fetchAirportRunways(airport.source,airport.sourceAirportId);
+                    const [runways, weather] = await Promise.all([
+                        fetchAirportRunways(airport.source, airport.sourceAirportId),
+                        fetchAirportWeather(airport.source, airport.sourceAirportId),
+                    ]);
 
                     if (!isMounted) {
                         return;
                     }
 
                     setRunways(runways);
+                    setWeather(weather);
                     setAirport(airport);
                 } else {
                     setRunways(null);
+                    setWeather(null);
                     setAirport(null);
                 }
             } catch {
@@ -65,6 +75,7 @@ const useAirportContext = ({
 
                 setAirport(null);
                 setRunways(null);
+                setWeather(null);
                 setErrorMessage('Could not load airport context.');
             } finally {
                 if (isMounted) {
@@ -79,7 +90,7 @@ const useAirportContext = ({
         };
     }, [latitude, longitude]);
 
-    return { airport, runways, isLoading, errorMessage};
+    return { airport, runways, weather, isLoading, errorMessage};
 };
 
 export default useAirportContext;
