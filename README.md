@@ -1,31 +1,17 @@
-# TurnFlow
+# Airspace Pulse Lovable Mock Frontend
 
-TurnFlow is een moderne, interactieve demo applicatie gebouwd met **React**, **TypeScript**, **Tailwind CSS** en **Vite**.
+This is a standalone UI/UX exploration copy of `apps/frontend`.
 
-Het biedt een realtime wachtrij- en beurtbeheer dashboard (Queue & Flow Management) met live statusupdates, balie-oproepen en overzichtelijke statistieken.
+It keeps the same React component structure, but replaces backend API calls with local mock data in:
 
-## Installatie & Lokaal starten
+- `src/api/aircraft.ts`
+- `src/api/airports.ts`
 
-Zorg dat je [Node.js](https://nodejs.org/) geïnstalleerd hebt.
+Use this folder for Lovable import/design iteration only. The production learning app remains `apps/frontend`.
 
-```bash
-# Clone de repository
-git clone https://github.com/SwatFish/TurnFlow.git
+Run locally:
 
-# Ga naar de directory
-cd TurnFlow
-
-# Installeer dependencies
-npm install
-
-# Start de ontwikkelserver
-npm run dev
+```powershell
+npm.cmd install
+npm.cmd run dev
 ```
-
-De applicatie draait standaard op `http://localhost:5173`.
-
-## Features
-- **Live Balie Oproep:** Wijs bezoekers toe aan balies met één klik.
-- **Wachtrij Overzicht:** Realtime inzicht in wachttijden en servicetypes.
-- **Ticket Generator:** Voeg direct nieuwe tickets toe aan de stroom.
-- **KPI Metrics:** Gemiddelde wachttijd, actieve sessies en afhandelingssnelheid.
